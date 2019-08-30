@@ -200,7 +200,7 @@ export default {
     onDeleteColumnClick (col) {
       return this.$q.dialog({
         title: `确定要删除 “${col.label}” 吗？`,
-        message: '关联的学生成绩也会被删除。',
+        message: '关联的学生活动详情也会被删除。',
         ok: {
           color: 'red',
           label: '删除'
