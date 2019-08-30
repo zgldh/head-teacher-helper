@@ -17,5 +17,5 @@ jobs:
     - name: npm install, build and test
       run: |
         npm install
-        npm install -g @quasar/cli
-        quasar build
+        npm install @quasar/cli
+        ./node_modules/.bin/quasar build
