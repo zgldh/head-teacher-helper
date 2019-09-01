@@ -189,23 +189,22 @@ export default {
   methods: {
     openURL,
     loadClassroom (classroomId) {
-      return this.$store.dispatch('classroom/loadClassroom', classroomId).then(result => {
-        return this.$store.dispatch('classroom/loadTests', this.classroom.id)
-      }).catch(err => {
-        console.log(err)
-        return this.$q.dialog({
-          title: `班级不存在`,
-          message: '您要查看的班级不存在，接下来返回首页。',
-          ok: {
-            color: 'primary',
-            label: '确定'
-          },
-          cancel: false,
-          preventClose: true
-        }).then(() => {
-          this.$router.push('/')
+      return this.$store.dispatch('classroom/loadClassroom', classroomId)
+        .catch(err => {
+          console.log(err)
+          return this.$q.dialog({
+            title: `班级不存在`,
+            message: '您要查看的班级不存在，接下来返回首页。',
+            ok: {
+              color: 'primary',
+              label: '确定'
+            },
+            cancel: false,
+            preventClose: true
+          }).then(() => {
+            this.$router.push('/')
+          })
         })
-      })
     },
     backToClassroomList () {
       this.$router.push({ path: '/' })

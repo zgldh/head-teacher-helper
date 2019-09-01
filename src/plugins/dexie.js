@@ -59,7 +59,7 @@ export default ({ app, router, Vue }) => {
   })
   db.version(3).stores({
     activities: '++id, classroomId',
-    actions: '++id, studentId, classroomId, activityId',
+    actions: '++id, studentId, classroomId, activityId'
   })
   Vue.prototype.$dexie = db
 }

@@ -1,6 +1,7 @@
 import { loadClassrooms, createClass, deleteClass, updateClassroom,
   loadStudents, addStudents as apiAddStudents, updateStudent,
-  loadTests as apiLoadTests, addTests, updateTest, deleteTest
+  loadTests as apiLoadTests, addTests, updateTest, deleteTest,
+  loadActivities as apiLoadActivities, addActivities, updateActivity, deleteActivity
 } from '../../apis/offline'
 import { ERROR_STUDENTS_IN_PLACE } from './state'
 /*
@@ -61,6 +62,10 @@ export function loadClassroom (context, classroomId) {
     if (classroom.studentCount !== classroom.students.length) {
       classroom.students = await loadStudents(classroom.id)
     }
+
+    await context.dispatch('loadTests', classroom.id)
+    await context.dispatch('loadActivities', classroom.id)
+
     context.commit('setCurrentClassroom', classroom)
     classroom.students.forEach(student => {
       context.commit('bindStudentToTile', {
@@ -245,6 +250,34 @@ export function setViewMode (context, viewMode) {
   context.commit('setViewMode', viewMode)
 }
 
+const PAN_LEFT = 'left'
+const PAN_RIGHT = 'right'
+
+function panItem (items, targetIndex, sortKey, direction = PAN_LEFT) {
+  items.sort((a, b) => {
+    if (direction === PAN_LEFT) {
+      return a[sortKey] - b[sortKey]
+    } else {
+      return b[sortKey] - a[sortKey]
+    }
+  })
+  let itemIndex = items.findIndex(item => item.id === targetIndex)
+  if (itemIndex === 0) {
+    return Promise.resolve(true)
+  }
+  let item = items[itemIndex]
+  let siblingTest = items[itemIndex - 1]
+  let dummyIndex = item[sortKey]
+  item[sortKey] = siblingTest[sortKey]
+  siblingTest[sortKey] = dummyIndex
+  return {
+    target: item,
+    sibling: siblingTest
+  }
+}
+
+// Test start
+
 export function loadTests (context, classroomId) {
   return apiLoadTests(classroomId).then(result => {
     context.commit('setTests', result)
@@ -270,36 +303,18 @@ export function addCourseTest (context, { course, name, date, index = null }) {
 }
 
 export function moveCourseTestLeft (context, { id, course }) {
-  let tests = context.state.tests[course].sort((a, b) => a.index - b.index)
-  let testIndex = tests.findIndex(item => item.id === id)
-  if (testIndex === 0) {
-    return Promise.resolve(true)
-  }
-  let test = tests[testIndex]
-  let siblingTest = tests[testIndex - 1]
-  let dummyIndex = test.index
-  test.index = siblingTest.index
-  siblingTest.index = dummyIndex
+  let { target, sibling } = panItem(context.state.tests[course], id, 'index', PAN_LEFT)
   return Promise.all([
-    context.dispatch('updateCourseTest', Object.assign({}, test, { course: course })),
-    context.dispatch('updateCourseTest', Object.assign({}, siblingTest, { course: course }))
+    context.dispatch('updateCourseTest', Object.assign({}, target, { course: course })),
+    context.dispatch('updateCourseTest', Object.assign({}, sibling, { course: course }))
   ])
 }
 
 export function moveCourseTestRight (context, { id, course }) {
-  let tests = context.state.tests[course].sort((a, b) => b.index - a.index)
-  let testIndex = tests.findIndex(item => item.id === id)
-  if (testIndex === 0) {
-    return Promise.resolve(true)
-  }
-  let test = tests[testIndex]
-  let siblingTest = tests[testIndex - 1]
-  let dummyIndex = test.index
-  test.index = siblingTest.index
-  siblingTest.index = dummyIndex
+  let { target, sibling } = panItem(context.state.tests[course], id, 'index', PAN_RIGHT)
   return Promise.all([
-    context.dispatch('updateCourseTest', Object.assign({}, test, { course: course })),
-    context.dispatch('updateCourseTest', Object.assign({}, siblingTest, { course: course }))
+    context.dispatch('updateCourseTest', Object.assign({}, target, { course: course })),
+    context.dispatch('updateCourseTest', Object.assign({}, sibling, { course: course }))
   ])
 }
 
@@ -320,6 +335,71 @@ export function deleteCourseTest (context, { id, course }) {
     context.commit('removeTest', { course, id })
   })
 }
+
+// Test end
+
+// Activity start
+
+export function loadActivities (context, classroomId) {
+  return apiLoadActivities(classroomId).then(result => {
+    context.commit('setActivities', result)
+    return result
+  })
+}
+
+export function addActivity (context, { name, date, index = null }) {
+  if (!index) {
+    index = context.state.activities.map(item => item.index).sort().pop() + 1
+  }
+  let activity = {
+    name,
+    date,
+    index
+  }
+
+  return addActivities(context.state.currentClassroom.id, [activity]).then(lastActivityId => {
+    activity = Object.assign({}, activity, { id: lastActivityId })
+    context.commit('addActivity', activity)
+    return activity
+  })
+}
+
+export function moveActivityLeft (context, id) {
+  let { target, sibling } = panItem(context.state.activities, id, 'index', PAN_LEFT)
+  return Promise.all([
+    context.dispatch('updateCourseActivity', Object.assign({}, target)),
+    context.dispatch('updateCourseActivity', Object.assign({}, sibling))
+  ])
+}
+
+export function moveActivityRight (context, id) {
+  let { target, sibling } = panItem(context.state.activities, id, 'index', PAN_RIGHT)
+  return Promise.all([
+    context.dispatch('updateCourseActivity', Object.assign({}, target)),
+    context.dispatch('updateCourseActivity', Object.assign({}, sibling))
+  ])
+}
+
+export function updateCourseActivity (context, { id, name, date, index }) {
+  let activity = {
+    name: name,
+    date: date,
+    index: index
+  }
+  return updateActivity(id, activity).then(result => {
+    activity = Object.assign({}, activity, { id: id })
+    context.commit('updateActivity', activity)
+    return Object.assign({}, activity, { id: id })
+  })
+}
+
+export function deleteCourseActivity (context, id) {
+  return deleteActivity(id).then(result => {
+    context.commit('removeActivity', id)
+  })
+}
+
+// Activity end
 
 function normalizeGrids (grids) {
   return grids.map(row => {

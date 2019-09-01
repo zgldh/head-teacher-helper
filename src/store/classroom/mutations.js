@@ -394,6 +394,8 @@ export function setViewMode (state, viewMode) {
   state.viewMode = viewMode
 }
 
+// Test start
+
 export function setTests (state, tests) {
   for (const key in state.tests) {
     if (state.tests.hasOwnProperty(key)) {
@@ -430,3 +432,38 @@ export function removeTest (state, { course, id }) {
   let index = tests.findIndex(item => item.id === id)
   tests.splice(index, 1)
 }
+
+// Test end
+
+// Activity start
+
+export function setActivities (state, activities) {
+  state.activities.splice(0, state.activities.length, ...activities)
+}
+
+export function addActivity (state, { id, name, date, index }) {
+  let activity = {
+    id,
+    name,
+    date,
+    index
+  }
+  state.activities.push(activity)
+}
+
+export function updateActivity (state, { id, name, date, index }) {
+  let activities = state.activities
+  let arrayIndex = activities.findIndex(item => item.id === id)
+  let activity = activities[arrayIndex]
+  _.set(activity, 'name', name)
+  _.set(activity, 'date', date)
+  _.set(activity, 'index', index)
+}
+
+export function removeActivity (state, id) {
+  let activities = state.activities
+  let index = activities.findIndex(item => item.id === id)
+  activities.splice(index, 1)
+}
+
+// Activity end

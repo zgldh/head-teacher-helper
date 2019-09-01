@@ -11,7 +11,6 @@
       <div slot="top-right" slot-scope="props" class="row">
         <q-btn icon="add" color="primary" :label="addActivityButtonLabel" @click="addActivity" />
         <q-btn icon="view_column" :color="columnsEditing?'green':''" flat @click="columnsEditing = !columnsEditing" />
-        <q-btn icon="edit" :color="isActivityInputting?'green':''" flat @click="onToggleActivityInputButton" />
       </div>
       <q-tr slot="header" slot-scope="props" :props="props">
         <q-th class="text-left sortable" :class="col.name" v-for="(col, index) in props.cols" :key="col.name" :props="props">
@@ -35,17 +34,7 @@
         <q-td :props="props" key="name">{{ props.row.name }}</q-td>
         <q-td :props="props" v-for="activity in activities"
           :key="getActivityColumnName(activity.id)" class="activity-input-td">
-          <input class="activity-input" type="text" :value="props.row[getActivityColumnName(activity.id)]"
-            v-if="isActivityInputting"
-            @change="onActivityChange($event, activity.id, props.row.id)" @focus="$event.target.select()"
-            @keypress.exact="onActivityKeyPress($event)"
-            @keypress.shift.enter="onActivityJumpNextRow($event)"
-            @keypress.shift.j.prevent="onActivityJumpNextRow($event)"
-            @keypress.shift.k.prevent="onActivityJumpPreRow($event)"
-            @keypress.shift.h.prevent="onActivityJumpPreColumn($event)"
-            @keypress.shift.l.prevent="onActivityJumpNextColumn($event)"
-            />
-          <span class="activity-span" v-else>{{props.row[getActivityColumnName(activity.id)]}}</span>
+          <span class="activity-span">{{props.row[getActivityColumnName(activity.id)]}}</span>
         </q-td>
       </q-tr>
     </q-table>
@@ -56,8 +45,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import addActivityModal from './modals/AddActivityModal'
-import { loadActivities, updateActivityByStudentAndTest } from '../apis/offline'
-import Vue from 'vue'
+// import { updateActivityByStudentAndTest } from '../apis/offline'
+// import Vue from 'vue'
 
 export default {
   name: 'StudentDataTableActivity',
@@ -68,7 +57,6 @@ export default {
   data () {
     return {
       isLoading: false,
-      isActivityInputting: false,
       innerTableView: 'basic',
       pagination: {
         sortBy: null, // String, column "name" property value
@@ -123,7 +111,7 @@ export default {
           label: '学号',
           align: 'left',
           field: 'sno',
-          sortable: !this.isActivityInputting,
+          sortable: true,
           classes: 'sno',
           style: ''
         },
@@ -133,7 +121,7 @@ export default {
           label: '名字',
           align: 'left',
           field: 'name',
-          sortable: !this.isActivityInputting,
+          sortable: true,
           classes: 'name',
           style: ''
         }
@@ -145,7 +133,7 @@ export default {
           label: activity.name,
           align: 'left',
           field: this.getActivityColumnName(activity.id),
-          sortable: !this.isActivityInputting,
+          sortable: false,
           classes: 'activity',
           style: 'width:100px',
           _activity: activity
@@ -218,10 +206,10 @@ export default {
       return this.$store.dispatch('classroom/moveActivityRight', { id: col._activity.id })
     },
     onActivityChange ($event, activityId, studentId) {
-      let newActivity = parseFloat($event.target.value)
-      return updateActivityByStudentAndTest(studentId, activityId, newActivity).then(result => {
-        Vue.set(this.studentActivities, `${studentId}-${activityId}`, newActivity)
-      })
+      // let newActivity = parseFloat($event.target.value)
+      // return updateActivityByStudentAndTest(studentId, activityId, newActivity).then(result => {
+      //   Vue.set(this.studentActivities, `${studentId}-${activityId}`, newActivity)
+      // })
     },
     onActivityJumpPreColumn ($event) {
       let target = $event.target
@@ -280,12 +268,6 @@ export default {
         let currentValue = parseFloat($event.target.value)
         $event.target.value = currentValue
         $event.preventDefault()
-      }
-    },
-    onToggleActivityInputButton () {
-      this.isActivityInputting = !this.isActivityInputting
-      if (this.isActivityInputting) {
-        this.pagination.sortBy = false
       }
     }
   }

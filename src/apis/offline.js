@@ -142,3 +142,36 @@ export function deleteScore (scoreId) {
     console.error(error.stack)
   })
 }
+
+export function loadActivities (classroomId) {
+  const db = Vue.prototype.$dexie
+  return db.activities.where({ classroomId: classroomId }).sortBy('index')
+}
+
+export function addActivities (classroomId, activities) {
+  const db = Vue.prototype.$dexie
+  return db.activities.bulkAdd(activities.map(activity => {
+    delete activity.id
+    return Object.assign({}, activity, { classroomId: classroomId })
+  }))
+}
+
+export function updateActivity (activityId, keyValues) {
+  const db = Vue.prototype.$dexie
+  return db.activities.update(activityId, keyValues)
+}
+
+export function deleteActivity (activityId) {
+  const db = Vue.prototype.$dexie
+  return db.transaction('rw', db.activities, db.scores, tx => {
+    return Promise.all([
+      db.activities.delete(activityId),
+      db.actions.where({ activityId: activityId }).delete()
+    ])
+  }).catch(error => {
+    //
+    // Transaction Failed
+    //
+    console.error(error.stack)
+  })
+}

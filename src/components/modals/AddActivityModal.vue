@@ -1,5 +1,5 @@
 <template>
-  <q-modal class="add-active-modal" v-model="show" transition @show="onShow">
+  <q-modal class="add-activity-modal" v-model="show" transition @show="onShow">
     <q-modal-layout>
       <q-toolbar slot="header">
         <q-btn
@@ -9,12 +9,12 @@
           v-close-overlay
           icon="close"
         />
-        <q-toolbar-title>{{courseTitle}}</q-toolbar-title>
+        <q-toolbar-title>{{dialogTitle}}</q-toolbar-title>
       </q-toolbar>
       <div class="layout-padding">
         <q-field helper="如：2019夏季运动会">
           <q-input
-            v-model="activeName"
+            v-model="activityName"
             type="text"
             float-label="请输入活动名字"
             ref="autoFocus"
@@ -36,7 +36,7 @@
             color="primary"
             label="保存"
             @click="save"
-            :disabled="!activeName"
+            :disabled="!activityName"
           />
         </q-toolbar-title>
       </q-toolbar>
@@ -48,15 +48,14 @@
 <script>
 
 export default {
-  name: 'AddActiveModal',
+  name: 'AddActivityModal',
   components: {},
   props: {},
   data () {
     return {
       show: false,
-      course: null,
-      courseTitle: '',
-      activeName: null,
+      dialogTitle: '',
+      activityName: null,
       date: null,
       promise: null,
       resolve: null,
@@ -68,10 +67,9 @@ export default {
   created () {
   },
   methods: {
-    open (course, dialogTitle, name = null, date = new Date()) {
-      this.courseTitle = dialogTitle
-      this.course = course
-      this.activeName = name
+    open (dialogTitle, name = null, date = new Date()) {
+      this.dialogTitle = dialogTitle
+      this.activityName = name
       this.date = date
       this.show = true
       this.promise = new Promise((resolve, reject) => {
@@ -92,11 +90,10 @@ export default {
     },
     save () {
       this.show = false
-      let activeName = this.activeName.trim()
-      if (activeName) {
+      let activityName = this.activityName.trim()
+      if (activityName) {
         this.resolve({
-          course: this.course,
-          name: activeName,
+          name: activityName,
           date: this.date
         })
       }
@@ -106,6 +103,6 @@ export default {
 </script>
 
 <style>
-  .add-active-modal {
+  .add-activity-modal {
   }
 </style>

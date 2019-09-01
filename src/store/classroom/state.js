@@ -83,7 +83,9 @@ export default {
     computer: [],
     music: [],
     art: []
-  }
+  },
+
+  activities: []
 }
 
 export const ERROR_STUDENTS_IN_PLACE = 'ERROR_STUDENTS_IN_PLACE'
