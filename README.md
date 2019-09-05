@@ -1,6 +1,8 @@
 # head-teacher-helper
 班级学生管理助手
 
+还没做完。缓慢更新中。
+
 ## Demo 
   
   http://demo.idagou.com/head-teacher-helper
