@@ -28,6 +28,7 @@ export default {
         name: null,
         gender: null,
         birthday: null,
+        enrollmentDate: null,
         positions: null,
         tags: null
       },
@@ -97,6 +98,17 @@ export default {
           field: 'birthday',
           sortable: true,
           classes: 'birthday',
+          style: '',
+          format: val => `${(val || '').substr(0, 10)}`
+        },
+        {
+          name: 'enrollmentDate',
+          required: true,
+          label: '入学日期',
+          align: 'left',
+          field: 'enrollmentDate',
+          sortable: true,
+          classes: 'enrollmentDate',
           style: '',
           format: val => `${(val || '').substr(0, 10)}`
         },

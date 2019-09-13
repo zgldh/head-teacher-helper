@@ -95,6 +95,16 @@
           <q-btn flat round dense icon="edit" @click="onTagsEdit"/>
         </q-item-side>
       </q-item>
+      <q-item-separator/>
+      <q-item>
+        <q-item-side>
+          <q-item-tile label>入学日期</q-item-tile>
+        </q-item-side>
+        <q-item-main>
+          <q-datetime v-model="enrollmentDate" type="date" hide-underline modal
+                      :default-view="enrollmentDate?'day':'year'"/>
+        </q-item-main>
+      </q-item>
     </q-list>
     <edit-student-positions-modal ref="EditStudentPositionsModal"/>
     <edit-student-tags-modal ref="EditStudentTagsModal"/>
@@ -146,7 +156,7 @@ export default {
       },
       set (value) {
         if (value !== this.$store.state.classroom.selectedStudent.birthday) {
-          this.$store.dispatch('classroom/setSelectedStudentProperty', { property: 'birthday', value })
+          this.$store.dispatch('classroom/setSelectedStudentProperty', { property: 'birthday', value: value.substr(0, 10) })
         }
       }
     },
@@ -156,6 +166,16 @@ export default {
       },
       set (value) {
         this.$store.dispatch('classroom/setSelectedStudentProperty', { property: 'gender', value })
+      }
+    },
+    enrollmentDate: {
+      get () {
+        return this.$store.state.classroom.selectedStudent.enrollmentDate
+      },
+      set (value) {
+        if (value !== this.$store.state.classroom.selectedStudent.enrollmentDate) {
+          this.$store.dispatch('classroom/setSelectedStudentProperty', { property: 'enrollmentDate', value: value.substr(0, 10) })
+        }
       }
     },
     ...mapState({

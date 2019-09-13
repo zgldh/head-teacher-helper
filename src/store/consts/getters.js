@@ -26,7 +26,7 @@ export function tableViews (state) {
   return [
     { label: '基本信息', value: state.TABLEVIEW_BASIC },
     { label: '成绩', value: state.TABLEVIEW_SCORE },
-    { label: '活动', value: state.TABLEVIEW_ACTIVITY },
+    { label: '出勤', value: state.TABLEVIEW_ACTIVITY },
     { label: '纪律', value: state.TABLEVIEW_DISCIPLINE }
   ]
 }

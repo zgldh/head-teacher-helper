@@ -4,7 +4,7 @@ export default {
   VIEWMODE_TABLE: 'table', // 视图模式： 表格
   TABLEVIEW_BASIC: 'basic', // 表格模式：基本信息
   TABLEVIEW_SCORE: 'score', // 表格模式：成绩
-  TABLEVIEW_ACTIVITY: 'activity', // 表格模式：活动
+  TABLEVIEW_ACTIVITY: 'activity', // 表格模式：出勤
   TABLEVIEW_DISCIPLINE: 'discipline', // 表格模式：纪律
   GRIDS_DESK: 'desk',
   GRIDS_FLOOR: 'floor',

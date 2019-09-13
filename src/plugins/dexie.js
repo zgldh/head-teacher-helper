@@ -12,28 +12,30 @@ export default ({ app, router, Vue }) => {
      * grids： [  // Rows array
      *  [ // Row
      *    { // Column/Tile
-      *      type: GRIDS_DESK|GRIDS_FLOOR,
-      *      row: 0,
-      *      col: 0
-      *    },
+     *      type: GRIDS_DESK|GRIDS_FLOOR,
+     *      row: 0,
+     *      col: 0
+     *    },
      *    {
-       *      type: GRIDS_DESK|GRIDS_FLOOR,
-       *      row: 0,
-       *      col: 1
-       *    },
+     *      type: GRIDS_DESK|GRIDS_FLOOR,
+     *      row: 0,
+     *      col: 1
+     *    },
      *    ...
      *  ],
      *  ...
-     * ]
-    gridsHead: [
+     *  ]
+     * gridsHead: [
      *  {
      *    type: GRIDS_DESK|GRIDS_FLOOR
      *    name: ''
      *  }
      * ]
-    groupDirection: '', // GROUP_DIRECTION_LR: 'lr',| GROUP_DIRECTION_RL: 'rl',
-    seatsRules: {},
-    positions: []
+     * groupDirection: '', // GROUP_DIRECTION_LR: 'lr',| GROUP_DIRECTION_RL: 'rl',
+     * seatsRules: {},
+     * positions: [],
+     * beginDate,                   // 班级开始日期
+     * graduateDate                 // 班级毕业日期
      */
     classrooms: 'id',
     /**
@@ -45,7 +47,8 @@ export default ({ app, router, Vue }) => {
      *  tags: ['tagA','tagB'],                            // 标签
      *  birthday: '2012-12-23',                           // 生日
      *  gender: 'male'|'female',                          // 性别
-     *  positions: ['班长','英语课代表','体育委员','小组长']  // 学生岗位
+     *  positions: ['班长','英语课代表','体育委员','小组长'] // 学生岗位
+     *  enrollmentDate,                                   // 入学日期
      */
     students: '++id,classroomId,sno',
     tests: '++id, course, classroomId',

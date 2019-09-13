@@ -6,14 +6,25 @@
         :inverted="$q.theme === 'ios'"
       >
         <q-toolbar-title>
-          <span class="q-mx-auto">{{classroom.title}}</span>
           <q-btn
+            size="lg"
             flat
             dense
             @click="editClassroomTitle"
             aria-label="编辑班级名字"
           >
-            <q-icon name="edit"/>
+            <span>{{classroom.title}}</span>
+            <q-icon class="q-ml-sm" size="16px" name="edit"/>
+          </q-btn>
+          <q-btn
+            size="md"
+            flat
+            dense
+            @click="editClassroomDuration"
+            aria-label="编辑学年时间"
+          >
+            <span>{{classroom.beginDate}} - {{classroom.graduateDate}}</span>
+            <q-icon class="q-ml-sm" size="16px" name="edit"/>
           </q-btn>
         </q-toolbar-title>
         <span class="editor-status" v-if="editorStatus==EDITOR_STATUS_DESK"><span>正在修改座椅布局</span>
@@ -112,6 +123,7 @@
 
     <note-modal ref="noteModal"><p>{{noteModalText}}</p></note-modal>
     <add-students-modal ref="addStudentsModal"></add-students-modal>
+    <edit-classroom-duration-modal ref="editClassroomDurationModal"></edit-classroom-duration-modal>
   </q-layout>
 </template>
 
@@ -121,10 +133,11 @@ import { mapState, mapGetters } from 'vuex'
 import NoteModal from '../components/modals/NoteModal'
 import AddStudentsModal from '../components/modals/AddStudentsModal'
 import SelectedStudentPanel from '../components/SelectedStudentPanel'
+import EditClassroomDurationModal from '../components/modals/EditClassroomDurationModal'
 
 export default {
   name: 'ClassroomLayout',
-  components: { SelectedStudentPanel, AddStudentsModal, NoteModal },
+  components: { SelectedStudentPanel, AddStudentsModal, NoteModal, EditClassroomDurationModal },
   data () {
     return {
       noteModalText: '',
@@ -228,6 +241,9 @@ export default {
         }
       }).catch(() => {
       })
+    },
+    editClassroomDuration () {
+      this.$refs.editClassroomDurationModal.open()
     },
     editDeskArrangement () {
       this.noteModalText = '您可以点击屏幕中的方格，来调整教室内座椅的布局。'
@@ -347,7 +363,7 @@ export default {
   }
 
   .classroom-layout .q-layout-header .q-toolbar .q-toolbar-title {
-    max-width: 200px;
+    max-width: 400px;
   }
 
   .classroom-layout .q-layout-header .q-toolbar .tools {

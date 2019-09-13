@@ -87,6 +87,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('classroom/getClassrooms')
+    this.$store.dispatch('classroom/setViewMode', 'grid')
   },
   methods: {
     async createClassroom () {

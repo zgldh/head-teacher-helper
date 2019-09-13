@@ -46,6 +46,15 @@ export function changeClassroomTitle (context, { classroomId, title }) {
   })
 }
 
+export function setCurrentClassroomProperty (context, { property, value }) {
+  let payload = {}
+  payload[property] = value
+  return updateClassroom(context.state.currentClassroom.id, payload).then(result => {
+    context.commit('setCurrentClassroomProperty', { property, value })
+    return result
+  })
+}
+
 export function reloadClassroom (context) {
   return context.dispatch('loadClassroom', context.state.currentClassroom.id)
 }

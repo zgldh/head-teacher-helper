@@ -56,12 +56,16 @@ export function changeClassroomTitle (state, { classroomId, title }) {
   }
 }
 
+export function setCurrentClassroomProperty (state, { property, value }) {
+  _.set(state.currentClassroom, property, value)
+}
+
 export function changeClassroomGroupDirection (state, direction) {
-  state.currentClassroom.groupDirection = direction
+  setCurrentClassroomProperty.bind(this)(state, { property: 'groupDirection', value: direction })
 }
 
 export function updateClassroomGridsHead (state, head) {
-  state.currentClassroom.gridsHead = head
+  setCurrentClassroomProperty.bind(this)(state, { property: 'gridsHead', value: head })
 }
 
 export function insertColumn (state, { index, type }) {
@@ -153,7 +157,7 @@ export function bindStudentToTile (state, { student, rowIndex, colIndex }) {
   }
 }
 
-export function addStudent (state, { student, sno, rowIndex, colIndex }) {
+export function addStudent (state, { student, sno, rowIndex, colIndex, enrollmentDate = null }) {
   let studentObject = {
     id: this.getters['classroom/nextStudentId'](),
     sno: sno || '无学号',
@@ -162,7 +166,8 @@ export function addStudent (state, { student, sno, rowIndex, colIndex }) {
     tags: [], // 标签
     birthday: null, // 生日
     gender: null, // 性别
-    positions: [] // 班干部职位
+    positions: [], // 班干部职位,
+    enrollmentDate: enrollmentDate || new Date().toISOString().substr(0, 10)
   }
   state.currentClassroom.students.push(studentObject)
   state.currentClassroom.studentCount++
