@@ -2,6 +2,7 @@ import { loadClassrooms, createClass, deleteClass, updateClassroom,
   loadStudents, addStudents as apiAddStudents, updateStudent,
   loadTests as apiLoadTests, addTests, updateTest, deleteTest,
   loadActivities as apiLoadActivities, addActivities, updateActivity, deleteActivity
+
 } from '../../apis/offline'
 import { ERROR_STUDENTS_IN_PLACE } from './state'
 /*
@@ -27,7 +28,9 @@ export function createClassroom (context) {
     gridsHead: newClassroom.gridsHead,
     groupDirection: newClassroom.groupDirection, // GROUP_DIRECTION_LR: 'lr',| GROUP_DIRECTION_RL: 'rl',
     seatsRules: newClassroom.seatsRules,
-    positions: newClassroom.positions
+    positions: newClassroom.positions,
+    beginDate: newClassroom.beginDate,
+    graduateDate: newClassroom.graduateDate
   }
   return createClass(classroomDatabaseRecord)
 }

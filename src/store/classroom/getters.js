@@ -57,6 +57,8 @@ export function generateNewClassroom (state, getters, rootState) {
      */
     classroom.gridsHead = getters['generateDeskGridsHead'](classroom.grids[0].map(item => item.type), classroom.groupDirection)
     classroom.positions = JSON.parse(JSON.stringify(rootState.consts.POSITIONS))
+    classroom.beginDate = new Date().toISOString().substr(0, 10) // 班级开始日期
+    classroom.graduateDate = new Date().toISOString().substr(0, 10) // 班级毕业日期
     return classroom
   }
 }
